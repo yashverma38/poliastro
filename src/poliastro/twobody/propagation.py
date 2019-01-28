@@ -14,7 +14,7 @@ from poliastro.core.propagation import (
     kepler as kepler_fast,
     mean_motion as mean_motion_fast,
 )
-from poliastro.integrators import DOP835
+from poliastro.integrators import DOP835, Verner78
 
 
 def cowell(k, r, v, tofs, rtol=1e-11, *, ad=None, **ad_kwargs):
@@ -70,13 +70,17 @@ def cowell(k, r, v, tofs, rtol=1e-11, *, ad=None, **ad_kwargs):
 
     f_with_ad = functools.partial(func_twobody, k=k, ad=ad, ad_kwargs=ad_kwargs)
 
+    multiple_input = hasattr(tof, "__len__")
+    if not multiple_input:
+        tof = [tof]
+    
     result = solve_ivp(
         f_with_ad,
         (0, max(tofs)),
         u0,
         rtol=rtol,
         atol=1e-12,
-        method=DOP835,
+        method=Verner78,
         dense_output=True,
     )
     if not result.success:
