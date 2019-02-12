@@ -70,10 +70,6 @@ def cowell(k, r, v, tofs, rtol=1e-11, *, ad=None, **ad_kwargs):
 
     f_with_ad = functools.partial(func_twobody, k=k, ad=ad, ad_kwargs=ad_kwargs)
 
-    multiple_input = hasattr(tof, "__len__")
-    if not multiple_input:
-        tof = [tof]
-    
     result = solve_ivp(
         f_with_ad,
         (0, max(tofs)),
@@ -83,6 +79,7 @@ def cowell(k, r, v, tofs, rtol=1e-11, *, ad=None, **ad_kwargs):
         method=Verner78,
         dense_output=True,
     )
+
     if not result.success:
         raise RuntimeError("Integration failed")
 
