@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import pytest
 from astropy.coordinates import ICRS
 
+from poliastro.constants import J2000
 from poliastro.bodies import Earth, Jupiter, Mars
 from poliastro.examples import iss
 from poliastro.plotting.static import StaticOrbitPlotter
@@ -116,6 +117,22 @@ def test_redraw_keeps_trajectories():
 
     assert len(op.trajectories) == 2
 
+@pytest.mark.mpl_image_compare
+def test_StaticOrbitPlotter_single_orbit():
+    fig, ax = plt.subplots()
+    plotter = StaticOrbitPlotter(ax=ax)
+    plotter.plot(iss)
+
+    return fig
+
+@pytest.mark.mpl_image_compare
+def test_StaticOrbitPlotter_multiple_orbits():
+    fig, ax = plt.subplots()
+    plotter = StaticOrbitPlotter(ax=ax)
+    plotter.plot(Orbit.from_body_ephem(Earth, epoch=J2000), label="Earth")
+    plotter.plot(Orbit.from_body_ephem(Mars, epoch=J2000), label="Mars")
+
+    return fig
 
 @pytest.mark.mpl_image_compare
 def test_trail_plotting():
