@@ -26,14 +26,14 @@ def _plot_bodies(orbit_plotter, outer=True, epoch=None):
         orbit_plotter.plot(orb, label=str(body))
 
 
-def _plot_solar_system_2d(outer=True, epoch=None, interactive=False):
+def _plot_solar_system_2d(outer=True, epoch=None, interactive=False, ax=None, dark=False):
     if interactive:
         orbit_plotter = (
             OrbitPlotter2D()
         )  # type: Union[OrbitPlotter2D, StaticOrbitPlotter]
         orbit_plotter.set_frame(*Orbit.from_body_ephem(Earth, epoch).pqw())
     else:
-        orbit_plotter = StaticOrbitPlotter()
+        orbit_plotter = StaticOrbitPlotter(ax=ax, dark=dark)
         orbit_plotter.set_frame(
             Orbit.from_body_ephem(Earth, epoch).get_perifocal_frame()
         )
@@ -51,7 +51,7 @@ def _plot_solar_system_3d(outer=True, epoch=None):
     return orbit_plotter
 
 
-def plot_solar_system(outer=True, epoch=None, use_3d=False, interactive=False):
+def plot_solar_system(outer=True, epoch=None, use_3d=False, interactive=False, ax=None, dark=False):
     """
     Plots the whole solar system in one single call.
 
@@ -77,6 +77,6 @@ def plot_solar_system(outer=True, epoch=None, use_3d=False, interactive=False):
     elif use_3d:
         op = _plot_solar_system_3d(outer, epoch)
     else:
-        op = _plot_solar_system_2d(outer, epoch, interactive)
+        op = _plot_solar_system_2d(outer, epoch, interactive, ax, dark)
 
     return op
