@@ -21,6 +21,7 @@ from poliastro.core.util import norm
 from poliastro.ephem import build_ephem_interpolant
 from poliastro.twobody import Orbit
 from poliastro.twobody.propagation import cowell
+from poliastro.util import norm as norm_units
 
 
 @pytest.mark.slow
@@ -178,27 +179,30 @@ def test_atmospheric_drag():
     # http://farside.ph.utexas.edu/teaching/celestial/Celestialhtml/node94.html#sair (10.148)
     # given the expression for \dot{r} / r, aproximate \Delta r \approx F_r * \Delta t
 
-    R = Earth.R.to(u.km).value
-    k = Earth.k.to(u.km ** 3 / u.s ** 2).value
+    R = Earth.R.to(u.km)
+    k = Earth.k.to(u.km ** 3 / u.s ** 2)
 
     # parameters of a circular orbit with h = 250 km (any value would do, but not too small)
     orbit = Orbit.circular(Earth, 250 * u.km)
     r0, _ = orbit.rv()
-    r0 = r0.to(u.km).value
 
     # parameters of a body
     C_D = 2.2  # dimentionless (any value would do)
-    A = ((np.pi / 4.0) * (u.m ** 2)).to(u.km ** 2).value  # km^2
-    m = 100  # kg
+    A = ((np.pi / 4.0) * (u.m ** 2)).to(u.km ** 2)  # km^2
+    m = 100 * u.kg  # kg
     B = C_D * A / m
 
     # parameters of the atmosphere
-    rho0 = rho0_earth.value  # kg/km^3
-    H0 = H0_earth.value
-    tof = 100000  # s
+    rho0 = rho0_earth  # kg/km^3
+    H0 = H0_earth
+    tof = 100000 * u.s  # s
 
     dr_expected = (
-        -B * rho0_earth * np.exp(-(norm(r0) - R) / H0) * np.sqrt(k * norm(r0)) * tof
+        -B
+        * rho0_earth
+        * np.exp(-(norm_units(r0) - R) / H0)
+        * np.sqrt(k * norm_units(r0))
+        * tof
     )
     # assuming the atmospheric decay during tof is small,
     # dr_expected = F_r * tof (Newton's integration formula), where
@@ -208,18 +212,18 @@ def test_atmospheric_drag():
         Earth.k,
         orbit.r,
         orbit.v,
-        [tof] * u.s,
+        [tof.to(u.s).value] * u.s,
         ad=atmospheric_drag,
-        R=R,
+        R=Earth.R.to(u.km).value,
         C_D=C_D,
-        A=A,
-        m=m,
-        H0=H0,
-        rho0=rho0,
+        A=A.to(u.km ** 2).value,
+        m=m.to(u.kg).value,
+        H0=H0.to(u.km).value,
+        rho0=rho0.to(u.kg / u.km ** 3).value,
     )
 
     assert_quantity_allclose(
-        norm(rr[0].to(u.km).value) - norm(r0), dr_expected.value, rtol=1e-2
+        norm_units(rr[0].to(u.km)) - norm_units(r0), dr_expected.decompose(), rtol=1e-2
     )
 
 
