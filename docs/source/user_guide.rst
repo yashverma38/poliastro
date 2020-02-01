@@ -73,15 +73,27 @@ And that's it! Notice a couple of things:
 Intermezzo: quick visualization of the orbit
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. warning::
+    Poliastro ships with two kind of plotters: statics (based on `matplotlib
+    <https://matplotlib.org/>`_) and the interactive ones (based on the modern
+    `plotly <https://plot.ly/>`_). Because of the way both previous packages
+    generate and render the figures, it may be possible that you have trouble
+    when trying to visualize the plotting output in your current IDE or your
+    development tool. Please refer to the `poliastro.plotting` sub-package for
+    more information on the topic.
+
+If we're working on interactive mode (for example, using the wonderful Jupyter
+notebook it is not required to call the `plt.show()` function) we can
+immediately plot the current orbit::
+
+    import matplotlib.pyplot as plt
+    ss.plot()
+    plt.show()
+
 .. figure:: _static/curtis.png
    :align: right
    :figwidth: 350
    :alt: Plot of the orbit
-
-If we're working on interactive mode (for example, using the wonderful Jupyter
-notebook) we can immediately plot the current orbit::
-
-    ss.plot()
 
 This plot is made in the so called *perifocal frame*, which means:
 
@@ -95,13 +107,6 @@ the instantaneous Keplerian orbit at that point. This is relevant in the
 context of perturbations, when the object shall deviate from its Keplerian
 orbit.
 
-
-.. note::
-
-  This visualization uses Plotly under the hood and works best in a Jupyter notebook.
-  To use the old interface based on matplotlib,
-  which might be more useful for batch jobs and publication-quality plots,
-  check out the :py:class:`poliastro.plotting.static.StaticOrbitPlotter`.
 
 From classical orbital elements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -327,6 +332,7 @@ easily visualize in two dimensions:
 
 .. code-block:: python
 
+    import matplotlib.pyplot as plt
     from poliastro.plotting import OrbitPlotter
     
     op = OrbitPlotter2D()
@@ -334,6 +340,7 @@ easily visualize in two dimensions:
     op.plot(ss_i, label="Initial orbit")
     op.plot(ss_a, label="Transfer orbit")
     op.plot(ss_f, label="Final orbit")
+    plt.show()
 
 Which produces this beautiful plot:
 
@@ -406,7 +413,7 @@ arguments the initial and final orbits and the output will be a
 internally since orbits epochs are known.
 
 For instance, this is a simplified version of the example
-`Going to Mars with Python using poliastro`_, where the orbit of the
+Going to Mars with Python using poliastro, where the orbit of the
 Mars Science Laboratory mission (rover Curiosity) is determined:
 
 .. code-block:: python
@@ -427,14 +434,10 @@ And these are the results::
     >>> dv_b
     (<Quantity 21910501.00019529 s>, <Quantity [287832.91384349,  58935.96079319, -94156.93383463] km / d>)
 
-.. figure:: _static/msl.png
-   :align: center
-   :alt: MSL orbit
+A three-dimensional plot is also shown to show the power of poliastro:
 
-   Mars Science Laboratory orbit.
-
-.. _`Going to Mars with Python using poliastro`: http://nbviewer.ipython.org/github/poliastro/poliastro/blob/master/docs/source/examples/Going%20to%20Mars%20with%20Python%20using%20poliastro.ipynb
-
+.. raw:: html
+    :file: auto_examples/images/sphx_glr_plot_going_to_mars_with_python_using_poliastro_001.html
 
 Fetching Orbits from external sources
 -------------------------------------

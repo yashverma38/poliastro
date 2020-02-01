@@ -85,10 +85,9 @@ Future ideas
 These are some things that I would love to implement in poliastro to expand
 its capabilities:
 
-* 3D plotting of orbits
+* Animated plots
 * Continuous thrust maneuvers
 * Tisserand graphs
-* Porkchop plots
 
 Note of the original author
 ---------------------------
