@@ -21,6 +21,11 @@ It should work on OS X without problems.
 Installation
 ------------
 
+.. warning::
+    If you want to develope and add more features to the software, an
+    editable installation is required. Please refer to the "Contributing"
+    section, which can be found in the side-bar.
+
 The easiest and fastest way to get the package up and running is to
 install poliastro using `conda <https://conda.io/docs/>`_::
 

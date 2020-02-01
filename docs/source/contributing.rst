@@ -30,13 +30,13 @@ new content.
 To build the docs, you must first create a development environment (see
 below) and then in the ``docs/`` directory run::
 
-    $ cd docs
+    $ cd docs/source
     $ make html
 
 After this, the new docs will be inside ``build/html``. You can open
 them by running an HTTP server::
 
-    $ cd build/html
+    $ cd ../build/html
     $ python -m http.server
     Serving HTTP on 0.0.0.0 port 8000 ...
 
